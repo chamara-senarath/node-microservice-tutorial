@@ -18,6 +18,14 @@ app.put('/register/:serviceName/:serviceVersion/:servicePort', (req, res) => {
     res.json({ serviceKey });
 })
 
+// Register new service
+app.delete('/register/:serviceName/:serviceVersion/:servicePort', (req, res) => {
+    const { serviceName, serviceVersion, servicePort } = req.params;
+    const serviceIp = req.socket.remoteAddress.includes('::') ? `[${req.socket.remoteAddress}]` : req.socket.remoteAddress;
+    serviceRegistry.unregister(serviceName, serviceVersion, serviceIp, servicePort);
+    res.status(200).send()
+})
+
 // Access a service
 app.get('/find/:serviceName/:serviceVersion', (req, res) => {
     const { serviceName, serviceVersion } = req.params;

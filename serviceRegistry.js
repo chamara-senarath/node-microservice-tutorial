@@ -22,15 +22,20 @@ const createServiceRegistry = (log) => {
     return key;
   };
 
+  const unregister = (name, version, ip, port) => {
+    const key = name + version + ip + port;
+    delete services[key];
+    log.debug(`Unregistered services ${name}, version ${version} at ${ip}:${port}`);
+  }
+
   const getCandidate = (name, version) => {
-    console.log(name, version)
     const candidates = Object.values(services)
       .filter(service => service.name === name && semver.satisfies(service.version, version));
 
     return candidates[Math.floor(Math.random() * candidates.length)];
   }
 
-  return { register, getCandidate };
+  return { register, unregister, getCandidate };
 }
 
 export default createServiceRegistry;
